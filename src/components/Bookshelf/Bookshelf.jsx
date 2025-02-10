@@ -9,22 +9,45 @@ const Bookshelf = () => {
   // State for new book input
   const [newBook, setNewBook] = useState({ title: "", author: "" });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target; 
-    setNewBook({ ...books, [name]: value }); 
-  };
+  // const handleInputChange = (event) => {
+  //   const { name, value } = event.target; 
+  //   setNewBook({ ...books, [name]: value }); 
+  
+  // };
  
 
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission
-    const updatedBooks = [...books, newBook];
-    setBooks(updatedBooks);
-    setNewBook({ title: '', author: ''});
+  // const handleSubmit = (event) => {
+  //   event.preventDefault(); // Prevent default form submission
+  //   const updatedBooks = [...books, newBook];
+  //   setBooks(updatedBooks);
+  //   setNewBook({ title: '', author: ''});
     
     
 
-  }
+  // }
+  const handleInputChange = (event) => {
+    const { name, value } = event.target; 
+    setNewBook(prevBook => ({
+      ...prevBook,  // Keep existing values
+      [name]: value // Update only the field being edited
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    // Prevent empty book submissions
+    if (!newBook.title.trim() || !newBook.author.trim()) return; 
+
+  
+    setBooks(prevBooks => [...prevBooks, { title: newBook.title, author: newBook.author }]);
+
+ 
+    setNewBook({ title: '', author: '' });
+  };
+
+
   return (
     <>
       <div className="bookshelfDiv">
@@ -46,7 +69,7 @@ const Bookshelf = () => {
             id="author"
             name="author"
               type="text"
-              placeholder='Author'
+              placeholder='Author Name'
               value={newBook.author}
               onChange={handleInputChange} />
             <button type="submit">Add Book</button>
